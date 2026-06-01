@@ -1,0 +1,1548 @@
+<!--
+  BRAWNY BREATH — v1 MVP
+  ========================
+  v2 UPGRADES: Replace placeholder images, trainer bios, transformation photos, map location, WhatsApp number
+  v3 UPGRADES: Vite + React migration, WhatsApp Business API, booking confirmation, member portal, analytics
+  CONFIG: All editable content lives in CONFIG{} in the <script> block and in SECTION comments in the HTML
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brawny Breath | Sweat with Style</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600&family=Bebas+Neue&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-primary: #141414;
+            --bg-secondary: #1E1E1E;
+            --bg-card: #242424;
+            --text-primary: #F5F5F5;
+            --text-muted: #9A9A9A;
+            --border: #2A2A2A;
+            --accent-cyan: #00BCD4;
+            --accent-wa: #25D366;
+            --font-heading: 'Bebas Neue', sans-serif;
+            --font-body: 'Barlow', sans-serif;
+        }
+
+        /* CSS Reset */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Base Typography */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: var(--font-heading);
+            font-weight: normal;
+        }
+
+        p,
+        span,
+        a,
+        li,
+        button,
+        input,
+        textarea {
+            font-family: var(--font-body);
+        }
+
+        /* NAVBAR */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: transparent;
+            border-bottom: none;
+            z-index: 100;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background-color: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        .nav-logo {
+            font-family: var(--font-heading);
+            font-size: 1.75rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: none;
+            /* Mobile first: hide links */
+        }
+
+        .nav-cta {
+            font-family: var(--font-heading);
+            color: var(--bg-primary);
+            background-color: var(--text-primary);
+            padding: 0.5rem 1.25rem;
+            text-decoration: none;
+            font-size: 1.25rem;
+            border-radius: 4px;
+            /* Hard rule: under 6px */
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            transition: opacity 0.2s ease;
+        }
+
+        .nav-cta:hover {
+            opacity: 0.85;
+        }
+
+        /* Hamburger button */
+        .nav-hamburger {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem;
+            color: var(--text-primary);
+        }
+
+        /* Mobile dropdown menu */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 57px;
+            /* navbar height */
+            left: 0;
+            width: 100%;
+            background-color: var(--bg-primary);
+            border-top: 1px solid var(--border);
+            z-index: 99;
+            flex-direction: column;
+        }
+
+        .mobile-menu.is-open {
+            display: flex;
+        }
+
+        .mobile-menu a {
+            padding: 1.125rem 1.5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            border-bottom: 1px solid var(--border);
+            transition: color 0.2s ease;
+        }
+
+        .mobile-menu a:hover {
+            color: var(--text-primary);
+        }
+
+        @media (min-width: 768px) {
+            .nav-links {
+                display: flex;
+                gap: 2rem;
+            }
+
+            .nav-links a {
+                color: var(--text-muted);
+                text-decoration: none;
+                font-weight: 500;
+                transition: color 0.2s ease;
+            }
+
+            .nav-links a:hover {
+                color: var(--text-primary);
+            }
+
+            .nav-hamburger {
+                display: none;
+                /* Hide on desktop */
+            }
+        }
+
+        /* HERO SECTION */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 6rem 1.5rem 2rem;
+            background-color: var(--bg-primary);
+            background-image: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url('https://images.unsplash.com/photo-1573345173719-5fbd4783d3c8?q=80&w=1333&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1440px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .hero-label {
+            color: var(--text-muted);
+            font-family: var(--font-body);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 0.75rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .hero-title {
+            color: var(--text-primary);
+            font-family: var(--font-heading);
+            font-size: 56px;
+            line-height: 0.9;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .hero-tagline {
+            font-family: var(--font-body);
+            font-weight: normal;
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            max-width: 400px;
+            line-height: 1.5;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            font-family: var(--font-heading);
+            padding: 0.875rem 2.5rem;
+            font-size: 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: opacity 0.2s ease;
+            box-shadow: none;
+            background-image: none;
+        }
+
+        .btn-primary {
+            background-color: var(--text-primary);
+            color: var(--bg-primary);
+            border: none;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--text-primary);
+        }
+
+        .btn-primary:hover,
+        .btn-secondary:hover {
+            opacity: 0.8;
+            transform: none;
+        }
+
+        @media (min-width: 768px) {
+            .hero {
+                padding: 8rem 3rem 4rem;
+            }
+
+            .hero-title {
+                font-size: 96px;
+            }
+
+            .hero-tagline {
+                font-size: 1.25rem;
+                max-width: 500px;
+            }
+        }
+
+        /* FADE-IN ANIMATION */
+        .fade-in {
+            opacity: 0;
+            transition: opacity 600ms ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+        }
+
+        /* SESSIONS SECTION */
+        .sessions {
+            background-color: var(--bg-secondary);
+            padding: 6rem 1.5rem;
+        }
+
+        .sessions-content {
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            color: var(--text-muted);
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            color: var(--text-primary);
+            font-family: var(--font-heading);
+            font-size: 48px;
+            line-height: 1;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .section-desc {
+            color: var(--text-muted);
+            font-family: var(--font-body);
+            font-size: 1.125rem;
+            line-height: 1.6;
+            margin-bottom: 3rem;
+            max-width: 600px;
+        }
+
+        .media-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .media-video {
+            background-color: var(--bg-card);
+            aspect-ratio: 16 / 9;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .play-btn {
+            color: var(--text-primary);
+            opacity: 0.8;
+            transition: opacity 0.2s ease;
+            cursor: pointer;
+        }
+
+        .play-btn:hover {
+            opacity: 1;
+        }
+
+        .media-label {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            color: var(--text-muted);
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+        }
+
+        .media-images {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .media-image {
+            background-color: var(--bg-card);
+            position: relative;
+            aspect-ratio: 1 / 1;
+        }
+
+        .stat-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+            align-items: center;
+        }
+
+        .stat-pill {
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            padding-left: 1rem;
+            border-left: 1px solid var(--border);
+            line-height: 1;
+        }
+
+        .stat-pill:first-child {
+            border-left: none;
+            padding-left: 0;
+        }
+
+        .text-link {
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 1.125rem;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .text-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (min-width: 768px) {
+            .sessions {
+                padding: 8rem 3rem;
+            }
+
+            .section-title {
+                font-size: 72px;
+            }
+
+            .media-grid {
+                grid-template-columns: 6fr 4fr;
+                gap: 1.5rem;
+            }
+
+            .media-images {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr 1fr;
+                gap: 1.5rem;
+            }
+
+            .media-image {
+                aspect-ratio: auto;
+            }
+        }
+
+        /* BOOKING SECTION */
+        .booking {
+            position: relative;
+            padding: 6rem 1.5rem;
+            background-color: var(--bg-primary);
+        }
+
+        .booking::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1573345173719-5fbd4783d3c8?q=80&w=1333&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.08;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .booking-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        .booking-step {
+            margin-bottom: 1.5rem;
+        }
+
+        .slot-grid {
+            display: flex;
+            gap: 0.75rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+        }
+
+        .slot-grid::-webkit-scrollbar {
+            display: none;
+        }
+
+        #time-grid {
+            flex-wrap: wrap;
+            overflow-x: visible;
+        }
+
+        .date-card {
+            flex: 0 0 auto;
+            width: 72px;
+            scroll-snap-align: start;
+            border: 1px solid var(--border);
+            background-color: var(--bg-card);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 0.25rem;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            color: var(--text-primary);
+        }
+
+        .date-card .day-abbr {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            line-height: 1;
+            margin-bottom: 0.25rem;
+            letter-spacing: 1px;
+        }
+
+        .date-card .date-num {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            line-height: 1;
+            margin-bottom: 0.125rem;
+        }
+
+        .date-card .month-abbr {
+            font-family: var(--font-body);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 1;
+            text-transform: uppercase;
+        }
+
+        .date-card.selected {
+            background-color: var(--text-primary);
+            color: var(--bg-primary);
+        }
+
+        .date-card.selected .month-abbr {
+            color: var(--bg-primary);
+        }
+
+        .slot-btn {
+            font-family: var(--font-body);
+            font-size: 1.125rem;
+            padding: 0.75rem 1.5rem;
+            border: 1px solid var(--border);
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            width: 100%;
+            text-align: center;
+        }
+
+        .slot-btn.selected {
+            background-color: var(--text-primary);
+            color: var(--bg-primary);
+        }
+
+        #step-2 {
+            margin-bottom: 3rem;
+            display: none;
+            opacity: 0;
+            transition: opacity 300ms ease;
+        }
+
+        .confirm-btn {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 1rem 2.5rem;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            background-color: var(--bg-card);
+            color: var(--text-muted);
+            cursor: not-allowed;
+            display: inline-block;
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+            width: 100%;
+            text-align: center;
+        }
+
+        .confirm-btn.active {
+            background-color: var(--text-primary);
+            color: var(--bg-primary);
+            border-color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        @media (min-width: 768px) {
+            .booking {
+                padding: 8rem 3rem;
+            }
+
+            .confirm-btn {
+                width: auto;
+            }
+        }
+
+        /* TRAINERS SECTION */
+        .trainers {
+            background-color: var(--bg-secondary);
+            padding: 6rem 1.5rem;
+        }
+
+        .trainers-content {
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        .trainers-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .trainer-card {
+            background-color: var(--bg-card);
+            border-radius: 6px;
+            border-top: 2px solid var(--accent-cyan);
+            overflow: hidden;
+            transition: background-color 0.2s ease;
+        }
+
+        .trainer-card:hover {
+            background-color: var(--border);
+        }
+
+        .trainer-photo {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+        }
+
+        .trainer-info {
+            padding: 1.5rem;
+        }
+
+        .trainer-name {
+            font-family: var(--font-heading);
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .trainer-title {
+            font-family: var(--font-body);
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .trainer-bio {
+            font-family: var(--font-body);
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            line-height: 1.5;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+        }
+
+        @media (min-width: 768px) {
+            .trainers {
+                padding: 8rem 3rem;
+            }
+
+            .trainers-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 2rem;
+            }
+        }
+
+        /* TRANSFORMATIONS SECTION */
+        .transformations {
+            background-color: var(--bg-primary);
+            padding: 6rem 1.5rem;
+        }
+
+        .transformations-content {
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        .transformations-grid {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+        }
+
+        .transformations-grid::-webkit-scrollbar {
+            display: none;
+        }
+
+        .transformation-card {
+            flex: 0 0 85%;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .transformation-labels {
+            display: flex;
+            margin-bottom: 0.5rem;
+        }
+
+        .transformation-labels span {
+            flex: 1;
+            color: var(--text-muted);
+            font-family: var(--font-body);
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .transformation-images {
+            display: flex;
+            width: 100%;
+            height: 320px;
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .image-wrapper {
+            flex: 1;
+            height: 100%;
+        }
+
+        .image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .image-divider {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 1px;
+            background-color: var(--border);
+            z-index: 1;
+        }
+
+        .transformation-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .transformation-name {
+            font-family: var(--font-heading);
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .transformation-quote {
+            font-family: var(--font-body);
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        @media (min-width: 768px) {
+            .transformations {
+                padding: 8rem 3rem;
+            }
+
+            .transformations-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 2rem;
+                overflow-x: visible;
+            }
+
+            .transformation-card {
+                flex: none;
+            }
+        }
+
+        /* LOCATION SECTION */
+        .location {
+            background-color: var(--bg-secondary);
+            padding: 6rem 1.5rem;
+        }
+
+        .location-content {
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 250px;
+            margin-bottom: 2rem;
+            border-radius: 0;
+            overflow: hidden;
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            display: block;
+        }
+
+        .location-details {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .location-details p {
+            font-family: var(--font-body);
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        @media (min-width: 768px) {
+            .location {
+                padding: 8rem 3rem;
+            }
+
+            .map-container {
+                height: 400px;
+            }
+
+            .location-details {
+                flex-direction: row;
+                justify-content: space-between;
+                gap: 2rem;
+            }
+        }
+
+        /* CTA SECTION */
+        .cta {
+            position: relative;
+            padding: 6rem 1.5rem;
+            background-color: var(--bg-primary);
+            background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('https://images.unsplash.com/photo-1573345173719-5fbd4783d3c8?q=80&w=1333&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            text-align: center;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            color: var(--text-primary);
+            font-family: var(--font-heading);
+            font-size: 48px;
+            line-height: 1;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .cta-desc {
+            color: var(--text-muted);
+            font-family: var(--font-body);
+            font-size: 1.125rem;
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+        }
+
+        .btn-whatsapp {
+            background-color: var(--text-primary);
+            color: var(--bg-primary);
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 1rem 2.5rem;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: opacity 0.2s ease;
+            box-shadow: none;
+        }
+
+        .btn-whatsapp:hover {
+            opacity: 0.85;
+        }
+
+        @media (min-width: 768px) {
+            .cta {
+                padding: 8rem 3rem;
+            }
+
+            .cta-title {
+                font-size: 72px;
+            }
+        }
+
+        /* FOOTER */
+        .footer {
+            background-color: var(--bg-primary);
+            padding: 4rem 1.5rem 2rem;
+        }
+
+        .footer-content {
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        .footer-top {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 2rem;
+        }
+
+        .footer-logo {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            color: var(--text-primary);
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+
+        .footer-tagline {
+            font-family: var(--font-body);
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .footer-social {
+            color: var(--text-muted);
+            font-family: var(--font-body);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.2s ease;
+        }
+
+        .footer-social:hover {
+            color: var(--text-primary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            color: var(--text-muted);
+            font-family: var(--font-body);
+            font-size: 0.75rem;
+        }
+
+        @media (min-width: 768px) {
+            .footer-top {
+                flex-direction: row;
+                justify-content: space-between;
+                gap: 0;
+            }
+            .footer-tagline {
+                flex: 1;
+                text-align: center;
+            }
+        }
+
+        /* FLOATING WHATSAPP BUTTON */
+        .floating-wa {
+            position: fixed;
+            bottom: 80px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            background-color: var(--accent-wa);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            text-decoration: none;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.2s ease;
+            box-shadow: none;
+        }
+
+        .floating-wa.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .floating-wa:hover {
+            transform: scale(1.05);
+        }
+
+        .floating-wa svg {
+            width: 32px;
+            height: 32px;
+            fill: currentColor;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SECTION: NAVBAR -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#home" class="nav-logo">BRAWNY BREATH</a>
+            <div class="nav-links">
+                <a href="#sessions">Sessions</a>
+                <a href="#trainers">Trainers</a>
+                <a href="#transformations">Results</a>
+                <a href="#booking">Book Trial</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <a href="#" class="nav-cta" onclick="openWhatsApp(); return false;">Join Now</a>
+            <!-- Hamburger: visible on mobile only -->
+            <button class="nav-hamburger" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
+                <!-- Icon toggles between burger and X via JS -->
+                <svg id="icon-burger" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <line x1="3" y1="12" x2="21" y2="12" />
+                    <line x1="3" y1="18" x2="21" y2="18" />
+                </svg>
+                <svg id="icon-close" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none;">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile dropdown menu (injected below navbar, outside nav for full-width stacking) -->
+    <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Mobile navigation">
+        <a href="#sessions" class="mobile-link">Sessions</a>
+        <a href="#trainers" class="mobile-link">Trainers</a>
+        <a href="#transformations" class="mobile-link">Transformations</a>
+        <a href="#booking" class="mobile-link">Book Trial</a>
+        <a href="#contact" class="mobile-link">Contact</a>
+    </div>
+
+    <!-- SECTION: HERO -->
+    <section class="hero" id="home">
+        <div class="hero-content fade-in">
+            <span class="hero-label">CHENNAI'S PREMIER CROSSFIT GYM</span>
+            <h1 class="hero-title">SWEAT WITH STYLE</h1>
+            <p class="hero-tagline">Group sessions designed to push you further than you thought possible.</p>
+            <div class="hero-buttons">
+                <a href="#booking" class="btn-primary">Book a Free Trial</a>
+                <a href="#sessions" class="btn-secondary">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION: SESSIONS -->
+    <section class="sessions" id="sessions">
+        <div class="sessions-content fade-in">
+            <span class="section-label fade-in">WHAT WE DO</span>
+            <h2 class="section-title fade-in">TRAIN TOGETHER. PUSH HARDER.</h2>
+            <p class="section-desc">Experience high-intensity, coach-led workouts designed to test your limits. Every
+                session is programmed for maximum efficiency, pushing you alongside a community that refuses to quit.
+            </p>
+
+            <div class="media-grid fade-in">
+                <div class="media-video">
+                    <div class="play-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                        </svg>
+                    </div>
+                    <span class="media-label">Session Highlight</span>
+                </div>
+                <div class="media-images">
+                    <div class="media-image">
+                        <span class="media-label">Group Session</span>
+                    </div>
+                    <div class="media-image">
+                        <span class="media-label">Group Session</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-pills fade-in">
+                <span class="stat-pill">45-Min Sessions</span>
+                <span class="stat-pill">All Fitness Levels</span>
+                <span class="stat-pill">Coach-Led Daily</span>
+            </div>
+
+            <a href="#booking" class="text-link">Book a Free Trial &rarr;</a>
+        </div>
+    </section>
+
+    <!-- SECTION: TRAINERS -->
+    <section class="trainers" id="trainers">
+        <div class="trainers-content">
+            <span class="section-label fade-in">THE TEAM</span>
+            <h2 class="section-title fade-in">MEET YOUR COACHES</h2>
+            <div class="trainers-grid" id="trainers-grid">
+                <!-- Trainers injected here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION: TRANSFORMATIONS -->
+    <section class="transformations" id="transformations">
+        <div class="transformations-content">
+            <span class="section-label fade-in">PROOF OF WORK</span>
+            <h2 class="section-title fade-in">REAL PEOPLE. REAL RESULTS.</h2>
+            <div class="transformations-grid" id="transformations-grid">
+                <!-- Transformations injected here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION: BOOKING -->
+    <section class="booking" id="booking">
+        <div class="booking-content">
+            <span class="section-label fade-in">GET STARTED</span>
+            <h2 class="section-title fade-in">BOOK YOUR FREE TRIAL</h2>
+            <p class="section-desc fade-in">Pick a slot. We'll hold your spot. No commitment required.</p>
+
+            <div class="booking-step" id="step-1">
+                <div class="slot-grid" id="day-grid">
+                    <!-- Days injected here -->
+                </div>
+            </div>
+
+            <div class="booking-step" id="step-2">
+                <p
+                    style="font-family: var(--font-body); font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.75rem;">
+                    SELECT A TIME
+                </p>
+                <div class="slot-grid" id="time-grid">
+                    <!-- Times injected here -->
+                </div>
+            </div>
+
+            <button class="confirm-btn" id="confirm-btn" disabled>Confirm & Book on WhatsApp</button>
+        </div>
+    </section>
+
+    <!-- SECTION: LOCATION -->
+    <section class="location" id="contact">
+        <div class="location-content">
+            <span class="section-label fade-in">LOCATION</span>
+            <h2 class="section-title fade-in">WHERE WE ARE</h2>
+
+            <div class="map-container">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3889.377769801775!2d80.19975077507495!3d12.883413087423868!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a525b2d7c7d5425%3A0xb0cb01a3c3c4ddd5!2sIXORA%20Club%20house!5e0!3m2!1sen!2sin!4v1779424158766!5m2!1sen!2sin"
+                    width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                <div class="map-fallback" id="map-fallback" style="display:none; padding: 2rem; background: var(--bg-card); 
+                  color: var(--text-muted); font-family: var(--font-body); 
+                  text-align: center; height: 100%; align-items: center; 
+                  justify-content: center;">
+                    <!-- Populated from CONFIG -->
+                </div>
+            </div>
+
+            <div class="location-details">
+                <div>
+                    <p style="font-size: 0.7rem; letter-spacing: 2px; 
+                  text-transform: uppercase; color: var(--text-muted); 
+                  margin-bottom: 0.4rem; font-family: var(--font-body);">ADDRESS</p>
+                    <p id="location-address"><!-- Populated from CONFIG --></p>
+                </div>
+                <div>
+                    <p style="font-size: 0.7rem; letter-spacing: 2px; 
+                  text-transform: uppercase; color: var(--text-muted); 
+                  margin-bottom: 0.4rem; font-family: var(--font-body);">CONTACT</p>
+                    <p id="location-phone"><!-- Populated from CONFIG --></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION: CTA -->
+    <section class="cta" id="cta">
+        <div class="cta-content">
+            <h2 class="cta-title fade-in">READY TO SWEAT WITH STYLE?</h2>
+            <p class="cta-desc">Join Chennai's most focused CrossFit community. First session is on us.</p>
+            <a href="#" class="btn-whatsapp" onclick="openWhatsApp(); return false;">Chat with Us on WhatsApp</a>
+        </div>
+    </section>
+
+    <!-- SECTION: FOOTER -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-top">
+                <div class="footer-logo">BRAWNY BREATH</div>
+                <div class="footer-tagline">— Sweat with Style —</div>
+                <a href="#" class="footer-social" id="footer-instagram" target="_blank" rel="noopener">Instagram ↗</a>
+            </div>
+            <div class="footer-bottom">
+                &copy; <span id="footer-year"></span> Brawny Breath. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- SECTION: FLOATING-WHATSAPP -->
+    <a href="#" class="floating-wa" id="floating-wa" aria-label="Chat on WhatsApp" onclick="openWhatsApp(); return false;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.571-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+        </svg>
+    </a>
+
+    <script>
+        const CONFIG = {
+            whatsappNumber: '910000000000',
+            defaultMessage: 'Hi Brawny Breath! I would like to know more about your memberships and group sessions.',
+            timeSlots: {
+                times: ['6:00 AM', '7:00 AM', '6:00 PM']
+            },
+            trainers: [
+                { name: 'Coach Placeholder One', title: 'Head Coach — CrossFit & Strength', bio: 'Over 8 years of coaching experience. Specialises in functional movement and group performance.', image: 'https://static.vecteezy.com/system/resources/thumbnails/063/477/529/small_2x/neutral-gray-silhouette-of-male-avatar-defoult-photo-placeholder-with-short-hair-for-anonymous-profile-picture-with-minimalist-style-suitable-for-various-social-media-platforms-and-websites-vector.jpg' },
+                { name: 'Coach Placeholder Two', title: 'CrossFit & Conditioning Coach', bio: 'Former competitive athlete. Brings intensity and precision to every session.', image: 'https://static.vecteezy.com/system/resources/thumbnails/063/477/529/small_2x/neutral-gray-silhouette-of-male-avatar-defoult-photo-placeholder-with-short-hair-for-anonymous-profile-picture-with-minimalist-style-suitable-for-various-social-media-platforms-and-websites-vector.jpg' },
+                { name: 'Coach Placeholder Three', title: 'Mobility & Recovery Coach', bio: 'Certified in corrective exercise. Ensures every athlete moves well and recovers faster.', image: 'https://static.vecteezy.com/system/resources/thumbnails/063/477/529/small_2x/neutral-gray-silhouette-of-male-avatar-defoult-photo-placeholder-with-short-hair-for-anonymous-profile-picture-with-minimalist-style-suitable-for-various-social-media-platforms-and-websites-vector.jpg' }
+            ],
+            transformations: [
+                { name: 'Member One', quote: 'I went from struggling with basic movements to completing my first RX workout in 3 months. The coaches push you in the right way.', beforeImage: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=400&q=80', afterImage: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&q=80' },
+                { name: 'Member Two', quote: 'The group energy is unlike anything I have experienced at a regular gym. Every session feels like a team effort.', beforeImage: 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=400&q=80', afterImage: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=400&q=80' },
+                { name: 'Member Three', quote: 'Lost 12kg in 4 months without ever feeling like I was on a diet. The programming is intelligent and the community keeps you accountable.', beforeImage: 'https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=400&q=80', afterImage: 'https://images.unsplash.com/photo-1549476464-37392f717541?w=400&q=80' }
+            ],
+            footer: {
+                address: '1st Floor, Bollineni Hillside IXORA, Nookampalayam, Arasankalani, Sithalapakkam, Chennai, Tamil Nadu 600131',
+                phone: '+91 00000 00000',
+                email: 'hello@brawnybreath.com',
+                instagram: 'https://instagram.com/brawnybreath',
+                year: new Date().getFullYear()
+            }
+        };
+
+        function openWhatsApp() {
+            const url = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(CONFIG.defaultMessage)}`;
+            window.open(url, '_blank');
+        }
+
+        function initFadeInObserver() {
+            const observer = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        obs.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            document.querySelectorAll('.fade-in').forEach(el => {
+                if (!el.classList.contains('hero-content') && !el.classList.contains('slot-btn')) {
+                    observer.observe(el);
+                }
+            });
+
+            setTimeout(() => {
+                const hero = document.querySelector('.hero-content');
+                if (hero) hero.classList.add('visible');
+            }, 300);
+        }
+
+        // ── Navbar scroll behavior ──────────────────────────────────────
+        const navbar = document.getElementById('navbar');
+        const floatingWa = document.getElementById('floating-wa');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            if (floatingWa) {
+                if (window.scrollY > 200) {
+                    floatingWa.classList.add('visible');
+                } else {
+                    floatingWa.classList.remove('visible');
+                }
+            }
+        }, { passive: true });
+
+        // ── Hamburger menu toggle ───────────────────────────────────────
+        const hamburgerBtn = document.getElementById('hamburger-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const iconBurger = document.getElementById('icon-burger');
+        const iconClose = document.getElementById('icon-close');
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('is-open');
+            iconBurger.style.display = 'block';
+            iconClose.style.display = 'none';
+            hamburgerBtn.setAttribute('aria-expanded', 'false');
+        }
+
+        hamburgerBtn.addEventListener('click', () => {
+            const isOpen = mobileMenu.classList.contains('is-open');
+            if (isOpen) {
+                closeMobileMenu();
+            } else {
+                mobileMenu.classList.add('is-open');
+                iconBurger.style.display = 'none';
+                iconClose.style.display = 'block';
+                hamburgerBtn.setAttribute('aria-expanded', 'true');
+            }
+        });
+
+        // Close menu when any mobile link is tapped
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+
+        // ── Booking Logic ──────────────────────────────────────────────
+        const dayGrid = document.getElementById('day-grid');
+        const timeGrid = document.getElementById('time-grid');
+        const step2 = document.getElementById('step-2');
+        const confirmBtn = document.getElementById('confirm-btn');
+
+        let selectedDayDate = null;
+        let selectedTime = null;
+
+        function getNext10ValidDates() {
+            const dates = [];
+            let date = new Date();
+            date.setDate(date.getDate() + 1); // start from tomorrow
+
+            while (dates.length < 10) {
+                if (date.getDay() !== 0) { // Skip Sundays
+                    dates.push(new Date(date));
+                }
+                date.setDate(date.getDate() + 1);
+            }
+            return dates;
+        }
+
+        function renderBookingFlow() {
+            if (!dayGrid || !timeGrid) return;
+
+            dayGrid.innerHTML = '';
+            const upcomingDates = getNext10ValidDates();
+
+            upcomingDates.forEach(dateObj => {
+                const dayAbbr = dateObj.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
+                const dateNum = dateObj.getDate();
+                const monthAbbr = dateObj.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+
+                const card = document.createElement('div');
+                card.className = 'date-card';
+                card.innerHTML = `
+                    <span class="day-abbr">${dayAbbr}</span>
+                    <span class="date-num">${dateNum}</span>
+                    <span class="month-abbr">${monthAbbr}</span>
+                `;
+
+                card.addEventListener('click', () => selectDay(dateObj, card));
+                dayGrid.appendChild(card);
+            });
+
+            timeGrid.innerHTML = '';
+            CONFIG.timeSlots.times.forEach(time => {
+                const btn = document.createElement('button');
+                btn.className = 'slot-btn fade-in';
+                btn.textContent = time;
+                btn.addEventListener('click', () => selectTime(time, btn));
+                timeGrid.appendChild(btn);
+            });
+        }
+
+        function selectDay(dateObj, cardElement) {
+            selectedDayDate = dateObj;
+            selectedTime = null;
+
+            document.querySelectorAll('#day-grid .date-card').forEach(card => card.classList.remove('selected'));
+            cardElement.classList.add('selected');
+
+            document.querySelectorAll('#time-grid .slot-btn').forEach(btn => btn.classList.remove('selected'));
+
+            step2.style.opacity = '0';
+            step2.style.display = 'none';
+
+            setTimeout(() => {
+                step2.style.display = 'block';
+                void step2.offsetWidth; // trigger reflow
+                step2.style.opacity = '1';
+
+                const slotBtns = document.querySelectorAll('#time-grid .slot-btn');
+                slotBtns.forEach((btn, index) => {
+                    btn.classList.remove('visible');
+                    btn.style.transitionDelay = `${index * 50}ms`;
+                    setTimeout(() => {
+                        btn.classList.add('visible');
+                    }, 50);
+                });
+            }, 10);
+
+            updateConfirmBtn();
+        }
+
+        function selectTime(time, btnElement) {
+            selectedTime = time;
+
+            document.querySelectorAll('#time-grid .slot-btn').forEach(btn => btn.classList.remove('selected'));
+            btnElement.classList.add('selected');
+
+            updateConfirmBtn();
+        }
+
+        function updateConfirmBtn() {
+            if (confirmBtn) {
+                if (selectedDayDate && selectedTime) {
+                    confirmBtn.classList.add('active');
+                    confirmBtn.disabled = false;
+                } else {
+                    confirmBtn.classList.remove('active');
+                    confirmBtn.disabled = true;
+                }
+            }
+        }
+
+        if (confirmBtn) {
+            confirmBtn.addEventListener('click', () => {
+                if (!selectedDayDate || !selectedTime) return;
+                const fullDateStr = selectedDayDate.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' });
+                const msgTemplate = `Hi Brawny Breath! I'd like to book a free trial session on ${fullDateStr} at ${selectedTime}. Please confirm my spot.`;
+                const url = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msgTemplate)}`;
+                window.open(url, '_blank');
+            });
+        }
+
+        function renderTrainers() {
+            const trainersGrid = document.getElementById('trainers-grid');
+            if (!trainersGrid) return;
+
+            CONFIG.trainers.forEach((trainer, index) => {
+                const card = document.createElement('div');
+                card.className = 'trainer-card fade-in';
+                card.style.transitionDelay = `${index * 100}ms`;
+                card.innerHTML = `
+                    <img src="${trainer.image}" alt="${trainer.name}" class="trainer-photo">
+                    <div class="trainer-info">
+                        <h3 class="trainer-name">${trainer.name}</h3>
+                        <p class="trainer-title">${trainer.title}</p>
+                        <p class="trainer-bio">${trainer.bio}</p>
+                    </div>
+                `;
+                trainersGrid.appendChild(card);
+            });
+        }
+
+        function renderTransformations() {
+            const grid = document.getElementById('transformations-grid');
+            if (!grid) return;
+
+            CONFIG.transformations.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'transformation-card fade-in';
+                card.style.transitionDelay = `${index * 100}ms`;
+                card.innerHTML = `
+                    <div class="transformation-labels">
+                        <span>BEFORE</span>
+                        <span>AFTER</span>
+                    </div>
+                    <div class="transformation-images">
+                        <div class="image-wrapper">
+                            <img src="${item.beforeImage}" alt="${item.name} Before">
+                        </div>
+                        <div class="image-divider"></div>
+                        <div class="image-wrapper">
+                            <img src="${item.afterImage}" alt="${item.name} After">
+                        </div>
+                    </div>
+                    <div class="transformation-info">
+                        <h3 class="transformation-name">${item.name}</h3>
+                        <p class="transformation-quote">${item.quote}</p>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // ── Initialize ─────────────────────────────────────────────────
+        function renderLocationDetails() {
+            const addressEl = document.getElementById('location-address');
+            const phoneEl = document.getElementById('location-phone');
+            const mapFallback = document.getElementById('map-fallback');
+            const instagramEl = document.getElementById('footer-instagram');
+
+            if (addressEl) addressEl.textContent = CONFIG.footer.address;
+            if (phoneEl) phoneEl.textContent = CONFIG.footer.phone;
+            if (mapFallback) mapFallback.textContent = 'Map unavailable \u2014 visit us at ' + CONFIG.footer.address;
+            if (instagramEl) instagramEl.href = CONFIG.footer.instagram;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('footer-year').textContent = CONFIG.footer.year;
+            renderTrainers();
+            renderTransformations();
+            renderBookingFlow();
+            renderLocationDetails();
+            initFadeInObserver();
+        });
+    </script>
+</body>
+
+</html>
