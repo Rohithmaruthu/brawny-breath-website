@@ -103,11 +103,21 @@
         }
 
         .nav-logo {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
             font-family: var(--font-heading);
-            font-size: 1.75rem;
-            color: var(--text-primary);
             text-decoration: none;
             letter-spacing: 1px;
+            padding: 0.15rem 0;
+        }
+
+        .nav-logo img,
+        .footer-logo img {
+            height: 42px;
+            max-height: 42px;
+            width: auto;
+            display: block;
         }
 
         .nav-links {
@@ -951,8 +961,9 @@
         }
 
         .footer-top {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: 1fr;
+            justify-items: center;
             align-items: center;
             gap: 1.5rem;
             margin-bottom: 3rem;
@@ -961,11 +972,33 @@
         }
 
         .footer-logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
             font-family: var(--font-heading);
-            font-size: 2rem;
+            font-size: 1.25rem;
             color: var(--text-primary);
             letter-spacing: 1px;
             text-decoration: none;
+        }
+
+        .footer-whatsapp {
+            color: var(--accent-wa);
+            font-weight: 600;
+        }
+
+        .footer-logo img.logo-mark {
+            height: 48px;
+            width: auto;
+            display: block;
+        }
+
+        .footer-logo img.logo-text {
+            height: auto;
+            max-width: 160px;
+            width: 100%;
+            display: block;
         }
 
         .footer-tagline {
@@ -995,13 +1028,16 @@
 
         @media (min-width: 768px) {
             .footer-top {
-                flex-direction: row;
-                justify-content: space-between;
-                gap: 0;
+                grid-template-columns: auto minmax(0, max-content) auto;
+                justify-items: center;
             }
-            .footer-tagline {
-                flex: 1;
-                text-align: center;
+
+            .footer-top .footer-whatsapp {
+                justify-self: start;
+            }
+
+            .footer-top #footer-instagram {
+                justify-self: end;
             }
         }
 
@@ -1048,7 +1084,10 @@
     <!-- SECTION: NAVBAR -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <a href="#home" class="nav-logo">BRAWNY BREATH</a>
+            <a href="#home" class="nav-logo">
+                <img src="BB_Logo_dark-removebg-preview.png" alt="Brawny Breath logo">
+            </a>
+
             <div class="nav-links">
                 <a href="#sessions">Sessions</a>
                 <a href="#trainers">Trainers</a>
@@ -1234,8 +1273,11 @@
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-top">
-                <div class="footer-logo">BRAWNY BREATH</div>
-                <div class="footer-tagline">— Sweat with Style —</div>
+                <a href="#" class="footer-social footer-whatsapp" onclick="openWhatsApp(); return false;" aria-label="Chat on WhatsApp">WhatsApp ↗</a>
+                <div class="footer-logo">
+                    <img src="BB_Logo_dark-removebg-preview.png" alt="Brawny Breath mark" class="logo-mark">
+                    <img src="BB-text.png" alt="Brawny Breath" class="logo-text">
+                </div>
                 <a href="#" class="footer-social" id="footer-instagram" target="_blank" rel="noopener">Instagram ↗</a>
             </div>
             <div class="footer-bottom">
