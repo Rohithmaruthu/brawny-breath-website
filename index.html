@@ -961,14 +961,20 @@
         }
 
         .footer-top {
-            display: grid;
-            grid-template-columns: 1fr;
-            justify-items: center;
+            display: flex;
+            flex-direction: column;
             align-items: center;
             gap: 1.5rem;
             margin-bottom: 3rem;
             border-bottom: 1px solid var(--border);
             padding-bottom: 2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: row;
+            gap: 2rem;
+            justify-content: center;
         }
 
         .footer-logo {
@@ -985,7 +991,6 @@
 
         .footer-whatsapp {
             color: var(--accent-wa);
-            font-weight: 600;
         }
 
         .footer-logo img.logo-mark {
@@ -1028,15 +1033,27 @@
 
         @media (min-width: 768px) {
             .footer-top {
-                grid-template-columns: auto minmax(0, max-content) auto;
-                justify-items: center;
+                display: grid;
+                grid-template-columns: 1fr auto 1fr;
+                align-items: center;
+            }
+
+            .footer-logo {
+                grid-column: 2;
+                justify-self: center;
+            }
+
+            .footer-links {
+                display: contents;
             }
 
             .footer-top .footer-whatsapp {
+                grid-column: 1;
                 justify-self: start;
             }
 
             .footer-top #footer-instagram {
+                grid-column: 3;
                 justify-self: end;
             }
         }
@@ -1273,12 +1290,14 @@
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-top">
-                <a href="#" class="footer-social footer-whatsapp" onclick="openWhatsApp(); return false;" aria-label="Chat on WhatsApp">WhatsApp ↗</a>
                 <div class="footer-logo">
                     <img src="BB_Logo_dark-removebg-preview.png" alt="Brawny Breath mark" class="logo-mark">
                     <img src="BB-text.png" alt="Brawny Breath" class="logo-text">
                 </div>
-                <a href="#" class="footer-social" id="footer-instagram" target="_blank" rel="noopener">Instagram ↗</a>
+                <div class="footer-links">
+                    <a href="#" class="footer-social footer-whatsapp" onclick="openWhatsApp(); return false;" aria-label="Chat on WhatsApp">WhatsApp ↗</a>
+                    <a href="#" class="footer-social" id="footer-instagram" target="_blank" rel="noopener">Instagram ↗</a>
+                </div>
             </div>
             <div class="footer-bottom">
                 &copy; <span id="footer-year"></span> Brawny Breath. All rights reserved.
