@@ -42,7 +42,8 @@
             padding: 0;
         }
 
-        html, body {
+        html,
+        body {
             scroll-behavior: smooth;
             overflow-x: hidden;
         }
@@ -652,7 +653,14 @@
             gap: 1.5rem;
         }
 
-        .trainer-card {
+        .trainers-team-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .trainer-card, .trainer-card-sm {
             background-color: var(--bg-card);
             border-radius: 6px;
             border-top: 2px solid var(--accent-cyan);
@@ -660,7 +668,7 @@
             transition: background-color 0.2s ease;
         }
 
-        .trainer-card:hover {
+        .trainer-card:hover, .trainer-card-sm:hover {
             background-color: var(--border);
         }
 
@@ -670,8 +678,16 @@
             object-fit: cover;
         }
 
+        .trainer-card-sm .trainer-photo {
+            height: 160px;
+        }
+
         .trainer-info {
             padding: 1.5rem;
+        }
+
+        .trainer-card-sm .trainer-info {
+            padding: 1rem;
         }
 
         .trainer-name {
@@ -688,6 +704,10 @@
             color: var(--text-muted);
             font-size: 0.875rem;
             margin-bottom: 1rem;
+        }
+
+        .trainer-card-sm .trainer-title {
+            margin-bottom: 0;
         }
 
         .trainer-bio {
@@ -710,6 +730,10 @@
             .trainers-grid {
                 grid-template-columns: repeat(3, 1fr);
                 gap: 2rem;
+            }
+
+            .trainers-team-grid {
+                grid-template-columns: repeat(4, 1fr);
             }
         }
 
@@ -1085,7 +1109,7 @@
         }
 
         .floating-wa:hover {
-            transform: scale(1.05);
+            transform: translateY(18px) scale(1.05);
         }
 
         .floating-wa svg {
@@ -1201,6 +1225,10 @@
             <div class="trainers-grid" id="trainers-grid">
                 <!-- Trainers injected here -->
             </div>
+            <p class="section-label fade-in" style="margin-top: 3rem;">THE TEAM</p>
+            <div class="trainers-team-grid" id="trainers-team-grid">
+                <!-- Team Trainers injected here -->
+            </div>
         </div>
     </section>
 
@@ -1295,8 +1323,10 @@
                     <img src="BB-text.png" alt="Brawny Breath" class="logo-text">
                 </div>
                 <div class="footer-links">
-                    <a href="#" class="footer-social footer-whatsapp" onclick="openWhatsApp(); return false;" aria-label="Chat on WhatsApp">WhatsApp ↗</a>
-                    <a href="#" class="footer-social" id="footer-instagram" target="_blank" rel="noopener">Instagram ↗</a>
+                    <a href="#" class="footer-social footer-whatsapp" onclick="openWhatsApp(); return false;"
+                        aria-label="Chat on WhatsApp">WhatsApp ↗</a>
+                    <a href="#" class="footer-social" id="footer-instagram" target="_blank" rel="noopener">Instagram
+                        ↗</a>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -1306,23 +1336,34 @@
     </footer>
 
     <!-- SECTION: FLOATING-WHATSAPP -->
-    <a href="#" class="floating-wa" id="floating-wa" aria-label="Chat on WhatsApp" onclick="openWhatsApp(); return false;">
+    <a href="#" class="floating-wa" id="floating-wa" aria-label="Chat on WhatsApp"
+        onclick="openWhatsApp(); return false;">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.571-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+            <path
+                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.571-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z" />
         </svg>
     </a>
 
     <script>
         const CONFIG = {
-            whatsappNumber: '910000000000',
+            whatsappNumber: '919560617776',
             defaultMessage: 'Hi Brawny Breath! I would like to know more about your memberships and group sessions.',
             timeSlots: {
                 times: ['6:00 AM', '7:00 AM', '6:00 PM']
             },
             trainers: [
-                { name: 'Coach Placeholder One', title: 'Head Coach — CrossFit & Strength', bio: 'Over 8 years of coaching experience. Specialises in functional movement and group performance.', image: 'https://static.vecteezy.com/system/resources/thumbnails/063/477/529/small_2x/neutral-gray-silhouette-of-male-avatar-defoult-photo-placeholder-with-short-hair-for-anonymous-profile-picture-with-minimalist-style-suitable-for-various-social-media-platforms-and-websites-vector.jpg' },
-                { name: 'Coach Placeholder Two', title: 'CrossFit & Conditioning Coach', bio: 'Former competitive athlete. Brings intensity and precision to every session.', image: 'https://static.vecteezy.com/system/resources/thumbnails/063/477/529/small_2x/neutral-gray-silhouette-of-male-avatar-defoult-photo-placeholder-with-short-hair-for-anonymous-profile-picture-with-minimalist-style-suitable-for-various-social-media-platforms-and-websites-vector.jpg' },
-                { name: 'Coach Placeholder Three', title: 'Mobility & Recovery Coach', bio: 'Certified in corrective exercise. Ensures every athlete moves well and recovers faster.', image: 'https://static.vecteezy.com/system/resources/thumbnails/063/477/529/small_2x/neutral-gray-silhouette-of-male-avatar-defoult-photo-placeholder-with-short-hair-for-anonymous-profile-picture-with-minimalist-style-suitable-for-various-social-media-platforms-and-websites-vector.jpg' }
+                { tier: 'featured', name: 'Lijoe', title: 'Head Trainer', bio: 'Leading coach with expertise in CrossFit programming and team performance.', image: 'https://static.vecteezy.com/system/resources/thumbnails/063/477/529/small_2x/neutral-gray-silhouette-of-male-avatar-defoult-photo-placeholder-with-short-hair-for-anonymous-profile-picture-with-minimalist-style-suitable-for-various-social-media-platforms-and-websites-vector.jpg' },
+                { tier: 'featured', name: 'Antony', title: 'Head Trainer', bio: 'Specialises in strength and conditioning with years of competitive coaching experience.', image: 'https://static.vecteezy.com/system/resources/thumbnails/063/477/529/small_2x/neutral-gray-silhouette-of-male-avatar-defoult-photo-placeholder-with-short-hair-for-anonymous-profile-picture-with-minimalist-style-suitable-for-various-social-media-platforms-and-websites-vector.jpg' },
+                { tier: 'featured', name: 'VijuKannan', title: 'Head Trainer', bio: 'Brings precision and intensity to every session. Focused on functional movement and athlete development.', image: 'https://static.vecteezy.com/system/resources/thumbnails/063/477/529/small_2x/neutral-gray-silhouette-of-male-avatar-defoult-photo-placeholder-with-short-hair-for-anonymous-profile-picture-with-minimalist-style-suitable-for-various-social-media-platforms-and-websites-vector.jpg' },
+                { tier: 'team', name: 'Anub', title: 'CrossFit Coach', image: 'https://static.vecteezy.com/system/resources/thumbnails/063/477/529/small_2x/neutral-gray-silhouette-of-male-avatar-defoult-photo-placeholder-with-short-hair-for-anonymous-profile-picture-with-minimalist-style-suitable-for-various-social-media-platforms-and-websites-vector.jpg' },
+                { tier: 'team', name: 'Shibin', title: 'CrossFit Coach', image: 'https://static.vecteezy.com/system/resources/thumbnails/063/477/529/small_2x/neutral-gray-silhouette-of-male-avatar-defoult-photo-placeholder-with-short-hair-for-anonymous-profile-picture-with-minimalist-style-suitable-for-various-social-media-platforms-and-websites-vector.jpg' },
+                { tier: 'team', name: 'Ajay', title: 'CrossFit Coach', image: 'https://static.vecteezy.com/system/resources/thumbnails/063/477/529/small_2x/neutral-gray-silhouette-of-male-avatar-defoult-photo-placeholder-with-short-hair-for-anonymous-profile-picture-with-minimalist-style-suitable-for-various-social-media-platforms-and-websites-vector.jpg' },
+                { tier: 'team', name: 'Ajesh', title: 'CrossFit Coach', image: 'https://static.vecteezy.com/system/resources/thumbnails/063/477/529/small_2x/neutral-gray-silhouette-of-male-avatar-defoult-photo-placeholder-with-short-hair-for-anonymous-profile-picture-with-minimalist-style-suitable-for-various-social-media-platforms-and-websites-vector.jpg' },
+                { tier: 'team', name: 'Thamizh', title: 'CrossFit Coach', image: 'https://static.vecteezy.com/system/resources/thumbnails/063/477/529/small_2x/neutral-gray-silhouette-of-male-avatar-defoult-photo-placeholder-with-short-hair-for-anonymous-profile-picture-with-minimalist-style-suitable-for-various-social-media-platforms-and-websites-vector.jpg' },
+                { tier: 'team', name: 'Arun', title: 'CrossFit Coach', image: 'https://static.vecteezy.com/system/resources/thumbnails/063/477/529/small_2x/neutral-gray-silhouette-of-male-avatar-defoult-photo-placeholder-with-short-hair-for-anonymous-profile-picture-with-minimalist-style-suitable-for-various-social-media-platforms-and-websites-vector.jpg' },
+                { tier: 'team', name: 'Raj Priyan', title: 'CrossFit Coach', image: 'https://static.vecteezy.com/system/resources/thumbnails/063/477/529/small_2x/neutral-gray-silhouette-of-male-avatar-defoult-photo-placeholder-with-short-hair-for-anonymous-profile-picture-with-minimalist-style-suitable-for-various-social-media-platforms-and-websites-vector.jpg' },
+                { tier: 'team', name: 'Priyatharsini', title: 'CrossFit Coach', image: 'https://static.vecteezy.com/system/resources/thumbnails/063/477/529/small_2x/neutral-gray-silhouette-of-male-avatar-defoult-photo-placeholder-with-short-hair-for-anonymous-profile-picture-with-minimalist-style-suitable-for-various-social-media-platforms-and-websites-vector.jpg' },
+                { tier: 'team', name: 'Aldrin', title: 'Sports Physiotherapist', image: 'https://static.vecteezy.com/system/resources/thumbnails/063/477/529/small_2x/neutral-gray-silhouette-of-male-avatar-defoult-photo-placeholder-with-short-hair-for-anonymous-profile-picture-with-minimalist-style-suitable-for-various-social-media-platforms-and-websites-vector.jpg' }
             ],
             transformations: [
                 { name: 'Member One', quote: 'I went from struggling with basic movements to completing my first RX workout in 3 months. The coaches push you in the right way.', beforeImage: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=400&q=80', afterImage: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&q=80' },
@@ -1533,21 +1574,40 @@
 
         function renderTrainers() {
             const trainersGrid = document.getElementById('trainers-grid');
-            if (!trainersGrid) return;
+            const teamGrid = document.getElementById('trainers-team-grid');
+            if (!trainersGrid || !teamGrid) return;
 
-            CONFIG.trainers.forEach((trainer, index) => {
+            let featuredCount = 0;
+            let teamCount = 0;
+
+            CONFIG.trainers.forEach((trainer) => {
                 const card = document.createElement('div');
-                card.className = 'trainer-card fade-in';
-                card.style.transitionDelay = `${index * 100}ms`;
-                card.innerHTML = `
-                    <img src="${trainer.image}" alt="${trainer.name}" class="trainer-photo">
-                    <div class="trainer-info">
-                        <h3 class="trainer-name">${trainer.name}</h3>
-                        <p class="trainer-title">${trainer.title}</p>
-                        <p class="trainer-bio">${trainer.bio}</p>
-                    </div>
-                `;
-                trainersGrid.appendChild(card);
+                if (trainer.tier === 'featured') {
+                    card.className = 'trainer-card fade-in';
+                    card.style.transitionDelay = `${featuredCount * 100}ms`;
+                    card.innerHTML = `
+                        <img src="${trainer.image}" alt="${trainer.name}" class="trainer-photo">
+                        <div class="trainer-info">
+                            <h3 class="trainer-name">${trainer.name}</h3>
+                            <p class="trainer-title">${trainer.title}</p>
+                            <p class="trainer-bio">${trainer.bio}</p>
+                        </div>
+                    `;
+                    trainersGrid.appendChild(card);
+                    featuredCount++;
+                } else if (trainer.tier === 'team') {
+                    card.className = 'trainer-card-sm fade-in';
+                    card.style.transitionDelay = `${teamCount * 100}ms`;
+                    card.innerHTML = `
+                        <img src="${trainer.image}" alt="${trainer.name}" class="trainer-photo">
+                        <div class="trainer-info">
+                            <h3 class="trainer-name">${trainer.name}</h3>
+                            <p class="trainer-title">${trainer.title}</p>
+                        </div>
+                    `;
+                    teamGrid.appendChild(card);
+                    teamCount++;
+                }
             });
         }
 
