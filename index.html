@@ -653,14 +653,40 @@
             gap: 1.5rem;
         }
 
+        .trainers-tabs {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0;
+        }
+
+        .trainers-tab {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding-bottom: 0.75rem;
+            cursor: pointer;
+            transition: color 0.2s ease, border-color 0.2s ease;
+            margin-bottom: -1px;
+        }
+
+        .trainers-tab.active {
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--text-primary);
+        }
+
         .trainers-team-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
-            margin-top: 2rem;
         }
 
-        .trainer-card, .trainer-card-sm {
+        .trainer-card {
             background-color: var(--bg-card);
             border-radius: 6px;
             border-top: 2px solid var(--accent-cyan);
@@ -668,7 +694,19 @@
             transition: background-color 0.2s ease;
         }
 
-        .trainer-card:hover, .trainer-card-sm:hover {
+        .trainer-card:hover {
+            background-color: var(--border);
+        }
+
+        .trainer-card-sm {
+            background-color: var(--bg-card);
+            border-radius: 6px;
+            border-top: 2px solid var(--accent-cyan);
+            overflow: hidden;
+            transition: background-color 0.2s ease;
+        }
+
+        .trainer-card-sm:hover {
             background-color: var(--border);
         }
 
@@ -679,7 +717,9 @@
         }
 
         .trainer-card-sm .trainer-photo {
+            width: 100%;
             height: 160px;
+            object-fit: cover;
         }
 
         .trainer-info {
@@ -687,7 +727,7 @@
         }
 
         .trainer-card-sm .trainer-info {
-            padding: 1rem;
+            padding: 0.875rem 1rem;
         }
 
         .trainer-name {
@@ -708,6 +748,14 @@
 
         .trainer-card-sm .trainer-title {
             margin-bottom: 0;
+        }
+
+        .trainer-card-sm .trainer-name {
+            font-size: 1.1rem;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            line-height: 1.1;
         }
 
         .trainer-bio {
@@ -734,6 +782,17 @@
 
             .trainers-team-grid {
                 grid-template-columns: repeat(4, 1fr);
+                gap: 1.5rem;
+            }
+
+            .trainers-team-grid .trainer-card-sm:last-child {
+                grid-column: 2 / 4;
+                justify-self: center;
+                width: calc(50% - 0.75rem);
+            }
+
+            .trainers-team-grid .trainer-card-sm:last-child .trainer-photo {
+                height: 160px;
             }
         }
 
@@ -1222,13 +1281,17 @@
         <div class="trainers-content">
             <span class="section-label fade-in">THE TEAM</span>
             <h2 class="section-title fade-in">MEET YOUR COACHES</h2>
-            <div class="trainers-grid" id="trainers-grid">
-                <!-- Trainers injected here -->
+            <!-- Tab bar -->
+            <div class="trainers-tabs">
+                <button class="trainers-tab active" data-tab="featured">HEAD TRAINERS</button>
+                <button class="trainers-tab" data-tab="team">FULL TEAM</button>
             </div>
-            <p class="section-label fade-in" style="margin-top: 3rem;">THE TEAM</p>
-            <div class="trainers-team-grid" id="trainers-team-grid">
-                <!-- Team Trainers injected here -->
-            </div>
+
+            <!-- Featured grid (visible by default) -->
+            <div class="trainers-grid" id="trainers-grid"></div>
+
+            <!-- Team grid (hidden by default) -->
+            <div class="trainers-team-grid" id="trainers-team-grid" style="display:none;"></div>
         </div>
     </section>
 
@@ -1573,41 +1636,55 @@
         }
 
         function renderTrainers() {
-            const trainersGrid = document.getElementById('trainers-grid');
+            const featuredGrid = document.getElementById('trainers-grid');
             const teamGrid = document.getElementById('trainers-team-grid');
-            if (!trainersGrid || !teamGrid) return;
+            if (!featuredGrid || !teamGrid) return;
 
-            let featuredCount = 0;
-            let teamCount = 0;
+            const featured = CONFIG.trainers.filter(t => t.tier === 'featured');
+            const team = CONFIG.trainers.filter(t => t.tier === 'team');
 
-            CONFIG.trainers.forEach((trainer) => {
+            featured.forEach((trainer, index) => {
                 const card = document.createElement('div');
-                if (trainer.tier === 'featured') {
-                    card.className = 'trainer-card fade-in';
-                    card.style.transitionDelay = `${featuredCount * 100}ms`;
-                    card.innerHTML = `
-                        <img src="${trainer.image}" alt="${trainer.name}" class="trainer-photo">
-                        <div class="trainer-info">
-                            <h3 class="trainer-name">${trainer.name}</h3>
-                            <p class="trainer-title">${trainer.title}</p>
-                            <p class="trainer-bio">${trainer.bio}</p>
-                        </div>
-                    `;
-                    trainersGrid.appendChild(card);
-                    featuredCount++;
-                } else if (trainer.tier === 'team') {
-                    card.className = 'trainer-card-sm fade-in';
-                    card.style.transitionDelay = `${teamCount * 100}ms`;
-                    card.innerHTML = `
-                        <img src="${trainer.image}" alt="${trainer.name}" class="trainer-photo">
-                        <div class="trainer-info">
-                            <h3 class="trainer-name">${trainer.name}</h3>
-                            <p class="trainer-title">${trainer.title}</p>
-                        </div>
-                    `;
-                    teamGrid.appendChild(card);
-                    teamCount++;
-                }
+                card.className = 'trainer-card fade-in';
+                card.style.transitionDelay = `${index * 100}ms`;
+                card.innerHTML = `
+                    <img src="${trainer.image}" alt="${trainer.name}" class="trainer-photo">
+                    <div class="trainer-info">
+                        <h3 class="trainer-name">${trainer.name}</h3>
+                        <p class="trainer-title">${trainer.title}</p>
+                        <p class="trainer-bio">${trainer.bio}</p>
+                    </div>
+                `;
+                featuredGrid.appendChild(card);
+            });
+
+            team.forEach((trainer, index) => {
+                const card = document.createElement('div');
+                card.className = 'trainer-card-sm fade-in';
+                card.style.transitionDelay = `${index * 100}ms`;
+                card.innerHTML = `
+                    <img src="${trainer.image}" alt="${trainer.name}" class="trainer-photo">
+                    <div class="trainer-info">
+                        <h3 class="trainer-name">${trainer.name}</h3>
+                        <p class="trainer-title">${trainer.title}</p>
+                    </div>
+                `;
+                teamGrid.appendChild(card);
+            });
+
+            document.querySelectorAll('.trainers-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const target = tab.dataset.tab;
+                    document.querySelectorAll('.trainers-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    if (target === 'featured') {
+                        featuredGrid.style.display = 'grid';
+                        teamGrid.style.display = 'none';
+                    } else {
+                        featuredGrid.style.display = 'none';
+                        teamGrid.style.display = 'grid';
+                    }
+                });
             });
         }
 
