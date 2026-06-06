@@ -1103,9 +1103,10 @@
         .footer-social {
             color: var(--text-muted);
             font-family: var(--font-body);
-            text-decoration: none;
+            text-decoration: underline;
+            text-underline-offset: 4px;
             font-size: 1rem;
-            transition: color 0.2s ease;
+            transition: color 0.2s ease, text-decoration-color 0.2s ease;
         }
 
         .footer-social:hover {
@@ -1392,9 +1393,8 @@
                 </div>
                 <div class="footer-links">
                     <a href="#" class="footer-social footer-whatsapp" onclick="openWhatsApp(); return false;"
-                        aria-label="Chat on WhatsApp">WhatsApp ↗</a>
-                    <a href="#" class="footer-social" id="footer-instagram" target="_blank" rel="noopener">Instagram
-                        ↗</a>
+                        aria-label="Chat on WhatsApp">WhatsApp &#x2197;&#xFE0E;</a>
+                    <a href="#" class="footer-social" id="footer-instagram" target="_blank" rel="noopener">Instagram &#x2197;&#xFE0E;</a>
                 </div>
             </div>
             <div class="footer-bottom">
